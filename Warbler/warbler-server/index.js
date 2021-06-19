@@ -7,7 +7,7 @@ const errorHandler = require('./handlers/error');
 const authRoutes = require('./routes/auth');
 const messageRoutes = require('./routes/messages');
 const { loginRequired, ensureCorrectUser } = require('./middleware/auth');
-
+const db = require('./models');
 const PORT = 8081;
 
 app.use(cors());
@@ -20,6 +20,21 @@ app.use('/api/users/:id/messages',
     ensureCorrectUser,
     messageRoutes
 );
+
+app.get('/api/messages', loginRequired, async function(req, res, next) {
+    try {
+        let messages = await db.Message.find()
+            .sort({ createdAt: "desc" })
+            .populate('user', {
+                username: true,
+                profileImageUrl: true
+            });
+        return res.status(200).json(messages);
+    }
+    catch (err) {
+        next(err);
+    }
+});
 
 app.use(function(req, res, next) {
     let err = new Error('Not Found');

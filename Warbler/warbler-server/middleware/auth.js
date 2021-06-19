@@ -1,10 +1,19 @@
 // require('dotenv').load();
 const jwt = require('jsonwebtoken');
-
+let token;
 // authentication
 exports.loginRequired = function(req, res, next) {
     try {
-        const token = req.headers.authorization.split(" ")[1]; // Bearer token
+        if (req.headers.authorization) {
+            token = req.headers.authorization.split(" ")[1];
+        }
+        else {
+            return next({
+                status: 401,
+                message: "Unauthorized"
+            });
+        }
+
         jwt.verify(token, process.env.SECRET_KEY, function verifyToken(err, decoded) {
             if (err) {
                 return next(err);
@@ -28,8 +37,18 @@ exports.loginRequired = function(req, res, next) {
 
 // authorizarion
 exports.ensureCorrectUser = function(req, res, next) {
+    let token;
     try {
-        const token = req.headers.authorization.split(" ")[1];
+        if (req.headers.authorization) {
+            token = req.headers.authorization.split(" ")[1];
+        }
+        else {
+            return next({
+                status: 401,
+                message: "Unauthorized"
+            });
+        }
+
         jwt.verify(token, process.env.SECRET_KEY, function verifyToken(err, decoded) {
             if (err) {
                 return next(err);
