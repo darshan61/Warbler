@@ -9,4 +9,4 @@ export default (state = { message: null }, action) => {
         default:
             return state;
     }
-}
+};

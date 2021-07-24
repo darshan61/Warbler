@@ -1,10 +1,12 @@
 import { combineReducers } from "redux";
 import currentUser from "./currentUser";
-import error from "./error"
+import errors from "./errors"
+import messages from "./messages";
 
 const rootReducer = combineReducers({
     currentUser,
-    error
+    errors,
+    messages
 });
 
 export default rootReducer;
