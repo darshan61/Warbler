@@ -8,7 +8,7 @@ class MessageList extends Component {
         this.props.fetchMessages();
     }
     render() {
-        const { messages, removeMessage } = this.props;
+        const { messages, removeMessage, currentUserId } = this.props;
         let messageList = messages.map(m => (
             <MessageItem 
             key={m._id} 
@@ -17,6 +17,7 @@ class MessageList extends Component {
             username={m.user.username} 
             profileImageUrl={m.user.profileImageUrl}
             removeMessage={removeMessage.bind(this,m.user_id, m._id)}
+            isCurrentUser={currentUserId === m.user._id}
             />
         ));
         return (
@@ -33,7 +34,8 @@ class MessageList extends Component {
 
 function mapStateToProps(state) {
     return {
-        messages: state.messages
+        messages: state.messages,
+        currentUserId: state.currentUser.user.id
     }
 }
 
